@@ -530,51 +530,6 @@
     }
 
     /* ===== PRESS GRID ===== */
-    .press-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem;
-    }
-
-    .press-grid blockquote {
-      margin: 0;
-      padding: 1.25rem 1.25rem 1rem;
-      border-inline-start: 3px solid #3498db;
-      background: rgba(52, 152, 219, 0.04);
-      border-radius: 0 0.5rem 0.5rem 0;
-      font-size: 0.95rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .press-grid blockquote:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-    }
-
-    [data-theme="dark"] .press-grid blockquote {
-      background: rgba(52, 152, 219, 0.1);
-    }
-
-    [data-theme="dark"] .press-grid blockquote:hover {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .press-grid blockquote p {
-      margin-bottom: 0.75rem;
-      font-style: italic;
-      font-weight: 500;
-      line-height: 1.45;
-    }
-
-    .press-grid blockquote cite {
-      font-size: 0.8rem;
-      font-style: normal;
-      opacity: 0.7;
-    }
-
     .more-link {
       font-weight: 600;
       font-size: 1.05rem;
@@ -582,8 +537,8 @@
 
     /* ===== VOICES SECTION ===== */
     .voices-category {
-      margin-top: 2rem;
-      margin-bottom: 0.75rem;
+      margin-top: 1.75rem;
+      margin-bottom: 0.5rem;
       font-size: 1rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -596,81 +551,122 @@
       margin-top: 0.5rem;
     }
 
-    /* ===== FEATURED QUOTES ===== */
-    .press-grid-featured blockquote {
-      border-inline-start-width: 4px;
+    /* ===== TICKER CAROUSEL ===== */
+    .ticker {
+      position: relative;
+      overflow: hidden;
+      /* Fade edges */
+      -webkit-mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+      mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+      /* Full bleed */
+      margin-left: -2rem;
+      margin-right: -2rem;
     }
 
-    .featured-quote p {
-      font-size: 1.05rem;
-      line-height: 1.5;
+    .ticker-track {
+      display: flex;
+      width: max-content;
+      will-change: transform;
     }
 
-    /* ===== ORG QUOTES ===== */
-    .org-quote {
-      border-inline-start-color: #7b1fa2 !important;
-      background: rgba(123, 31, 162, 0.04) !important;
+    .ticker-half {
+      display: flex;
+      gap: 0.75rem;
+      flex-shrink: 0;
+      padding-right: 0.75rem;
     }
 
-    [data-theme="dark"] .org-quote {
-      background: rgba(123, 31, 162, 0.1) !important;
+    /* Left scroll: translate from 0 to -50% (one copy's width) */
+    @keyframes ticker-scroll-left {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
 
-    /* ===== VIDEO QUOTES ===== */
-    .video-quotes {
+    /* Right scroll: translate from -50% to 0 */
+    @keyframes ticker-scroll-right {
+      from { transform: translateX(-50%); }
+      to   { transform: translateX(0); }
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .ticker-track { animation: none !important; }
+      .ticker { overflow-x: auto; }
+    }
+
+    /* ===== TICKER CARDS ===== */
+    .ticker-card {
+      --tc-h: 207;
+      --tc-s: 70%;
+      --tc-accent: hsl(var(--tc-h), var(--tc-s), 45%);
+
+      flex-shrink: 0;
+      width: 300px;
+      height: 188px;
+      margin: 0;
+      padding: 1rem 1.25rem;
+      border-radius: 0.65rem;
+      font-size: 0.88rem;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      justify-content: space-between;
+      overflow: hidden;
+      border-inline-start: 3.5px solid var(--tc-accent);
+      background: hsl(var(--tc-h), var(--tc-s), 96%);
+      transition: box-shadow 0.15s ease, transform 0.15s ease;
     }
 
-    .video-quote {
-      margin: 0;
-      padding: 1rem 1.5rem;
-      border-inline-start: 4px solid #d32f2f;
-      background: rgba(211, 47, 47, 0.03);
-      border-radius: 0 0.5rem 0.5rem 0;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    [data-theme="dark"] .ticker-card {
+      background: hsl(var(--tc-h), calc(var(--tc-s) * 0.4), 16%);
     }
 
-    .video-quote:hover {
-      transform: translateX(4px);
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    .ticker-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px hsla(var(--tc-h), var(--tc-s), 40%, 0.15);
     }
 
-    [data-theme="dark"] .video-quote {
-      background: rgba(211, 47, 47, 0.08);
+    [data-theme="dark"] .ticker-card:hover {
+      box-shadow: 0 4px 20px hsla(var(--tc-h), var(--tc-s), 30%, 0.3);
     }
 
-    [data-theme="dark"] .video-quote:hover {
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .video-quote p {
+    .ticker-card p {
+      margin: 0 0 0.5rem;
       font-style: italic;
-      font-size: 1.05rem;
-      line-height: 1.5;
-      margin-bottom: 0.5rem;
+      font-weight: 500;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 6;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
-    .video-quote cite {
-      font-size: 0.85rem;
+    .ticker-card cite {
+      font-size: 0.75rem;
       font-style: normal;
-      font-weight: 600;
-      opacity: 0.75;
+      opacity: 0.6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
     }
 
-    /* ===== COMMUNITY QUOTES ===== */
-    .community-quote {
-      border-inline-start-color: #f57c00;
-      background: rgba(245, 124, 0, 0.03);
-    }
+    /* Variant overrides (only for font-style differences) */
+    .tc-video p { font-style: italic; }
+    .tc-community p { font-style: normal; }
+    .tc-featured p { font-size: 0.92rem; }
 
-    [data-theme="dark"] .community-quote {
-      background: rgba(245, 124, 0, 0.07);
-    }
-
-    .community-quote p {
-      font-style: normal;
+    /* Mobile: narrower cards */
+    @media (max-width: 600px) {
+      .ticker-card {
+        width: 260px;
+        height: 175px;
+        padding: 0.85rem 1rem;
+        font-size: 0.82rem;
+      }
+      .ticker {
+        margin-left: -1rem;
+        margin-right: -1rem;
+      }
     }
 
     /* ===== SIGNATORIES ===== */
@@ -709,7 +705,7 @@
       font-size: 0.8rem;
       opacity: 0.5;
       margin-top: 0;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .sig-count a {
@@ -717,77 +713,81 @@
       letter-spacing: normal;
     }
 
-    .sig-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 auto 2rem;
-      columns: 1;
-    }
-
-    @media (min-width: 900px) {
-      .sig-list {
-        columns: 2;
-        column-gap: 2rem;
-      }
-    }
-
-    .signatories-landing li {
-      display: flex;
-      align-items: center;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid rgba(128, 128, 128, 0.15);
-      break-inside: avoid;
-    }
-
-    .signatories-landing li:last-child {
-      border-bottom: none;
-      padding-bottom: 1.5rem;
-    }
-
-    .sig-logo {
-      flex-shrink: 0;
-      width: 1.5rem;
-      height: 1.5rem;
-      object-fit: contain;
-      margin-inline-end: 0.75rem;
-      border-radius: 4px;
-    }
-
-    .sig-details {
+    /* Signatory ticker cards */
+    .tc-sig {
+      --tc-h: 220;
+      --tc-s: 25%;
+      width: 240px;
+      height: 220px;
+      padding: 1.5rem 1.5rem 1.25rem;
       display: flex;
       flex-direction: column;
-      gap: 0.1rem;
-      min-width: 0;
-    }
-
-    .sig-name {
-      font-weight: 800;
-      font-size: 0.8rem;
-      letter-spacing: 0.01em;
-    }
-
-    .sig-flag {
-      margin-inline-start: 0.4em;
-      font-size: 0.85em;
-      vertical-align: middle;
-    }
-
-    .sig-details a {
-      font-size: 0.8rem;
-      opacity: 0.5;
-      letter-spacing: 0.02em;
+      align-items: center;
+      text-align: center;
+      gap: 0.5rem;
       text-decoration: none;
+      color: var(--pico-color);
+      border-inline-start-width: 3px;
+      background: hsl(var(--tc-h), var(--tc-s), 97%);
+      border-color: hsl(var(--tc-h), var(--tc-s), 60%);
     }
 
-    .sig-details a:hover {
-      opacity: 0.8;
+    [data-theme="dark"] .tc-sig {
+      background: hsl(var(--tc-h), calc(var(--tc-s) * 0.3), 14%);
     }
 
-    .sig-links {
+    .tc-sig:hover {
+      color: var(--pico-color);
+    }
+
+    .sig-card-logo {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: #fff;
+      padding: 3px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      flex-shrink: 0;
+    }
+
+    [data-theme="dark"] .sig-card-logo {
+      background: rgba(255,255,255,0.1);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    .sig-card-name {
+      font-weight: 800;
+      font-size: 0.92rem;
+      line-height: 1.3;
+      /* Allow full wrapping, no truncation */
+      word-break: break-word;
+      overflow-wrap: break-word;
+      flex: 1;
       display: flex;
       align-items: center;
-      gap: 0.3em;
-      flex-wrap: wrap;
+    }
+
+    .sig-card-url {
+      font-size: 0.75rem;
+      opacity: 0.45;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    @media (max-width: 600px) {
+      .tc-sig {
+        width: 210px;
+        height: 200px;
+        padding: 1.25rem;
+      }
+      .sig-card-logo {
+        width: 48px;
+        height: 48px;
+      }
+      .sig-card-name { font-size: 0.85rem; }
     }
 
     /* ===== CTA BANNERS ===== */
@@ -873,9 +873,7 @@
     /* ===== CLOSING ===== */
     .closing {
       text-align: center;
-      padding: 2.5rem 1rem;
-      border-top: 3px solid;
-      border-image: linear-gradient(90deg, transparent, #d32f2f, transparent) 1;
+      padding: 2rem 1rem 1rem;
     }
 
     .closing-lede {
@@ -904,10 +902,6 @@
         grid-template-columns: 1fr;
       }
 
-      .press-grid {
-        grid-template-columns: 1fr;
-      }
-
       .precedent-section {
         padding: 1.25rem;
       }
@@ -923,8 +917,8 @@
 
     /* ===== LANDING FOOTER ===== */
     .landing-footer {
-      border-top: 1px solid #dee2e6;
-      padding: 3rem 2rem 2rem;
+      border-top: none;
+      padding: 1rem 2rem 2rem;
       font-size: 14px;
       line-height: 1.6;
     }

@@ -1,7 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
-import Signatories from '../components/Signatories.astro';
+import QuoteTicker from '../components/QuoteTicker.astro';
+import signatures from '../data/signatures.yaml';
+import { logoPath } from '../lib/signatures';
 import { languages } from '../i18n/config';
 import { getLandingStrings, getTranslationPercent } from '../i18n/locales';
 import { markdownify } from '../i18n/config';
@@ -40,6 +42,8 @@ const editorialItems = shuffle(editorialQuotes);
 const orgItems = shuffle(orgQuotes);
 const creatorItems = shuffle(creatorQuotes);
 const communityItems = shuffle(communityQuotes);
+const shuffledSigs = shuffle(signatures as any[]);
+const sigCountryCount = new Set(signatures.map((s: any) => s.region).filter(Boolean)).size;
 
 // countdown
 const deadline = new Date('2026-09-01T00:00:00Z');
@@ -255,68 +259,82 @@ const daysLeft = Math.max(0, Math.ceil((deadline.getTime() - now.getTime()) / (1
       </div>
     </section>
 
+    <!-- Signatories -->
+    <section id="signatories" class="signatories-landing">
+      <div class="sig-rule"></div>
+      <h2>All those opposed&hellip;</h2>
+      <p class="sig-count">{signatures.length} organizations from {sigCountryCount} countries have signed the <a href="/open-letter">open letter</a></p>
+      <QuoteTicker direction="right" variant="sigs" duration={160}>
+        {shuffledSigs.map((sig: any) => (
+          <a href={`https://${sig.url}`} target="_blank" class="ticker-card tc-sig">
+            <img class="sig-card-logo" src={logoPath(sig.url)} alt="" loading="lazy" />
+            <span class="sig-card-name">{sig.organization}</span>
+            <span class="sig-card-url">{sig.url}</span>
+          </a>
+        ))}
+      </QuoteTicker>
+      <p style="text-align:center; margin-top: 1rem;">
+        <a href="/open-letter" class="more-link">Read the full open letter and thank the signatories &rarr;</a>
+      </p>
+    </section>
+
     <!-- Press and coverage -->
     <section id="voices" class="voices-section">
       <h2>{t.voices_heading}</h2>
 
       <h3 class="voices-category">{t.voices_press}</h3>
-      <div class="press-grid">
+      <QuoteTicker direction="left" variant="press" duration={270}>
         {pressItems.map((item: any) => (
-          <blockquote>
+          <blockquote class="ticker-card" data-color={item.color || null}>
             <p>"{item.quote}"</p>
             <cite>{item.author && <>{item.author}, </>}<a href={item.url} target="_blank">{item.source} &#8599;</a></cite>
           </blockquote>
         ))}
-      </div>
+      </QuoteTicker>
 
       <h3 class="voices-category">{t.voices_editorials}</h3>
-      <div class="press-grid press-grid-featured">
+      <QuoteTicker direction="right" variant="featured" duration={135}>
         {editorialItems.map((item: any) => (
-          <blockquote class="featured-quote">
+          <blockquote class="ticker-card tc-featured" data-color={item.color || null}>
             <p>"{item.quote}"</p>
             <cite>{item.author && <>{item.author}, </>}<a href={item.url} target="_blank">{item.source} &#8599;</a></cite>
           </blockquote>
         ))}
-      </div>
+      </QuoteTicker>
 
       <h3 class="voices-category">{t.voices_orgs}</h3>
-      <div class="press-grid press-grid-featured">
+      <QuoteTicker direction="left" variant="org" duration={120}>
         {orgItems.map((item: any) => (
-          <blockquote class="featured-quote org-quote">
+          <blockquote class="ticker-card" data-color={item.color || null}>
             <p>"{item.quote}"</p>
             <cite><a href={item.url} target="_blank">{item.source} &#8599;</a></cite>
           </blockquote>
         ))}
-      </div>
+      </QuoteTicker>
 
       <h3 class="voices-category">{t.voices_creators}</h3>
-      <div class="video-quotes">
+      <QuoteTicker direction="right" variant="video" duration={210}>
         {creatorItems.map((item: any) => (
-          <blockquote class="video-quote">
+          <blockquote class="ticker-card tc-video" data-color={item.color || null}>
             <p>"{item.quote}"</p>
             <cite>{item.author} &ndash; <a href={item.url} target="_blank">{item.link_text || 'YouTube'} &#8599;</a></cite>
           </blockquote>
         ))}
-      </div>
+      </QuoteTicker>
 
       <h3 class="voices-category">{t.voices_community}</h3>
-      <div class="video-quotes">
+      <QuoteTicker direction="left" variant="community" duration={180}>
         {communityItems.map((item: any) => (
-          <blockquote class="video-quote community-quote">
+          <blockquote class="ticker-card tc-community" data-color={item.color || null}>
             <p>"{item.quote}"</p>
             <cite>{item.author}{item.author_note && <> ({item.author_note})</>}, <a href={item.url} target="_blank">{item.source} &#8599;</a></cite>
           </blockquote>
         ))}
-      </div>
+      </QuoteTicker>
 
       <p style="text-align:center; margin-top: 2rem;">
         <a href="/cta/" class="more-link">{t.voices_more} &rarr;</a>
       </p>
-    </section>
-
-    <!-- Signatories -->
-    <section id="signatories" class="signatories-landing">
-      <Signatories mode="compact" />
     </section>
 
     <!-- CTA banner -->
