@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import Signatories from '../components/Signatories.astro';
 import { languages } from '../i18n/config';
-import { getLandingStrings } from '../i18n/locales';
+import { getLandingStrings, getTranslationPercent } from '../i18n/locales';
 import { markdownify } from '../i18n/config';
 import LanguagePicker from '../components/LanguagePicker.astro';
 
@@ -22,6 +22,8 @@ import communityQuotes from '../data/quotes/community.yaml';
 
 const locale = 'en';
 const t = getLandingStrings(locale);
+const translatePct = getTranslationPercent(locale);
+const translateUrl = `https://github.com/keepandroidopen/keepandroidopen.github.io/tree/main/src/i18n/locales/${locale}.yaml`;
 
 // Fisher-Yates shuffle for build-time randomization
 function shuffle<T>(arr: T[]): T[] {
@@ -382,7 +384,7 @@ const daysLeft = Math.max(0, Math.ceil((deadline.getTime() - now.getTime()) / (1
           <h4>{t.footer_translations}</h4>
           <ul>
             <li><a href="/cta/">{t.footer_languages}</a></li>
-            <li><a href="https://github.com/keepandroidopen/keepandroidopen.github.io/blob/main/src/content/pages/en/index.md" target="_blank">{t.footer_help_translate} &#8599;</a></li>
+            <li><a href={translateUrl} target="_blank">{t.footer_help_translate}{translatePct < 100 && ` (${translatePct}%)`} &#8599;</a></li>
           </ul>
         </div>
       </div>

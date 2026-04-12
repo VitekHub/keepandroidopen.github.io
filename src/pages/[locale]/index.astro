@@ -8,7 +8,7 @@ import ThemeToggle from '../../components/ThemeToggle.astro';
 import Signatories from '../../components/Signatories.astro';
 import LanguagePicker from '../../components/LanguagePicker.astro';
 import { languages } from '../../i18n/config';
-import { getLandingStrings } from '../../i18n/locales';
+import { getLandingStrings, getTranslationPercent } from '../../i18n/locales';
 import { markdownify, isRtl } from '../../i18n/config';
 import '../../styles/landing.css';
 import techPressQuotes from '../../data/quotes/tech-press.yaml';
@@ -25,6 +25,8 @@ export function getStaticPaths() {
 
 const { locale } = Astro.params;
 const t = getLandingStrings(locale!);
+const translatePct = getTranslationPercent(locale!);
+const translateUrl = `https://github.com/keepandroidopen/keepandroidopen.github.io/tree/main/src/i18n/locales/${locale}.yaml`;
 
 // Fisher-Yates shuffle for build-time randomization
 function shuffle<T>(arr: T[]): T[] {
@@ -299,7 +301,7 @@ const ctaPath = `/${locale}/cta/`;
           <h4>{t.footer_translations}</h4>
           <ul>
             <li><a href={ctaPath}>{t.footer_languages}</a></li>
-            <li><a href="https://github.com/keepandroidopen/keepandroidopen.github.io/blob/main/src/content/pages/en/index.md" target="_blank">{t.footer_help_translate} &#8599;</a></li>
+            <li><a href={translateUrl} target="_blank">{t.footer_help_translate}{translatePct < 100 && ` (${translatePct}%)`} &#8599;</a></li>
           </ul>
         </div>
       </div>

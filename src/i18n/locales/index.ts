@@ -36,3 +36,24 @@ export function getLandingStrings(locale: string = 'en'): Record<string, string>
   }
   return { ...enStrings, ...localeStrings };
 }
+
+/**
+ * Returns the percentage of en.yaml keys that have been translated
+ * (i.e. overridden with a non-empty, non-identical value) in the given locale.
+ * Returns 100 for English.
+ */
+export function getTranslationPercent(locale: string): number {
+  if (locale === 'en') return 100;
+  const raw = loadLocale(locale);
+  const totalKeys = Object.keys(enStrings).length;
+  if (totalKeys === 0) return 0;
+  let translated = 0;
+  for (const [k, v] of Object.entries(enStrings)) {
+    const localeVal = raw[k];
+    // Count as translated if the locale has a non-empty value different from English
+    if (localeVal && localeVal !== '' && localeVal !== v) {
+      translated++;
+    }
+  }
+  return Math.round((translated / totalKeys) * 100);
+}
